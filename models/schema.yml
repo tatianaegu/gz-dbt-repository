@@ -1,0 +1,34 @@
+version: 2
+sources:
+   - name: raw
+     schema: gz_raw_data #Path of the table in BQ
+     description: greenwez raw data source
+     tables:
+         - name: sales
+           identifier: raw_gz_sales #What is the exact name of the table in  BQ
+           description: sales of greewneez / we have one row per product_id found in each order_id
+           columns:
+             - name: "(orders_id || '-' || pdt_id)"
+               description: primary key of the table
+               tests:
+                 - unique
+                 - not_null
+         - name: product
+           identifier: raw_gz_product
+           description: purchase_price by products_id
+           columns:
+             - name: products_id
+               description: primary key of the table
+               tests:
+                 - unique
+                 - not_null
+                 
+         - name: ship
+           identifier: raw_gz_ship
+           description: shipping details for each order
+           columns:
+            - name: orders_id
+              description: primary key of the table
+              tests:
+                 - unique
+                 - not_null
