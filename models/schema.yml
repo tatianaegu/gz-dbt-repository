@@ -1,34 +1,56 @@
 version: 2
+
 sources:
-   - name: raw
-     schema: gz_raw_data #Path of the table in BQ
-     description: greenwez raw data source
-     tables:
-         - name: sales
-           identifier: raw_gz_sales #What is the exact name of the table in  BQ
-           description: sales of greewneez / we have one row per product_id found in each order_id
-           columns:
-             - name: "(orders_id || '-' || pdt_id)"
-               description: primary key of the table
-               tests:
-                 - unique
-                 - not_null
-         - name: product
-           identifier: raw_gz_product
-           description: purchase_price by products_id
-           columns:
-             - name: products_id
-               description: primary key of the table
-               tests:
-                 - unique
-                 - not_null
-                 
-         - name: ship
-           identifier: raw_gz_ship
-           description: shipping details for each order
-           columns:
-            - name: orders_id
-              description: primary key of the table
-              tests:
-                 - unique
-                 - not_null
+  - name: raw
+    schema: gz_raw_data  # Path of the table in BQ
+    description: greenweez raw data source
+    tables:
+    - name: sales
+      identifier: raw_gz_sales
+      description: sales of Greenweez / we have one row per product_id found in each orders_id
+      columns:
+        - name: date_date
+          description: date of purchase
+        - name: orders_id
+          description: foreign key to ship
+        - name: pdt_id
+          description: foreign key to product
+        - name: revenue
+          description: the amount paid by the customer to purchase the product. revenue = quantity * selling_price
+        - name: quantity
+          description: the quantity of products purchased for a given order
+      tests:
+        - unique:
+            column_name: "(orders_id || '-' || pdt_id)"
+        ## OR ## if dbt_utils is installed
+        
+    - name: product
+      identifier: raw_gz_product
+      description: purchase_price by products_id
+      columns:
+        - name: products_id
+          description: primary key of the table
+    
+          tests:
+            - unique
+            - not_null
+
+    - name: ship
+      identifier: raw_gz_ship
+      description: shipping details for each order
+      columns:
+        - name: orders_id
+          description: primary key of the table
+          tests:
+            - unique
+            - not_null
+
+        - name: shipping_fee
+          description: fee charged to the customer for shipping the order
+
+        - name: logcost
+          description: internal logistics cost related to handling and delivering the order
+
+        - name: ship_cost
+          description: actual shipping cost incurred by Greenweez
+          
